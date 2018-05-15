@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Rust Introduction</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .rust-icon-header {
+        background-image: url(https://www.rust-lang.org/logos/rust-logo-blk.svg);
+        background-position: right;
+        background-repeat: no-repeat;
+        background-size: contain;
+        height: 64px;
+        margin: 0 0 0 auto;
+        padding: 10px;
+        text-align: left;
+        width: 128px;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+![logo](https://www.rust-lang.org/logos/rust-logo-blk.svg)
+# Rust
+
+### A brief introduction
+
+.right[Kevin Choubacha]
+.right[May 2018]
+
+---
+layout: true
+name: header
+
+.right[.rust-icon-header[
+Rust
+]]
+
+---
+
+template: header
+
+# Agenda
+
+1. **Why Rust?**
+1. Installation
+1. Binding Data
+1. Primitives
+1. Function Signature
+1. Structs and Enums
+1. Generics
+1. Closures
+1. Loops and iteration
+1. Matching!
+1. Testing
+
+---
+
+template: header
+name: why-rust
+
+### Why Rust?
+
+---
+
+template: why-rust
+
+## Statically Typed
+* Robust trait and generic system
+* Memory lifetimes and borrowing are part of the type system
+* Eliminates whole classes of unit tests
+
+---
+
+template: why-rust
+
+## Safe
+* Type Safe
+* No common low-level pitfalls
+  * use after free
+  * no null pointers
+  * memory leaks
+  * little-to-no undefined behavior
+
+---
+
+template: why-rust
+
+## Fast!
+* Comparable to c++ in performance
+* No garbage collection
+  * Memory lifetimes are calculated at compilation
+* Very low memory profile
+
+---
+
+template: why-rust
+
+## Zero-Cost Abstractions
+* All programming is an exercise in abstractions
+* Rust abstractions can be coded with zero allocation at runtime
+
+---
+
+template: why-rust
+
+## Fearless Concurrency
+* Memory model excludes whole classes of concurrency issues
+* Immutable by default (mutable for performance)
+* No data races
+
+---
+
+template: why-rust
+
+## What's being built in rust?
+* Browsers (Servo)
+* Rewriting JS Framework engines (WASM + GlimmerVM)
+* Microservices (Actix-web framework)
+* Command Line Tools (clapp crate)
+* Real-time systems
+* Cryptocurrencies (Parity)
+* Network Proxies (Conduit)
+* Build Automation (Habitat)
+
+---
+
+template: header
+
+# Agenda
+
+1. Why Rust?
+1. **Installation**
+1. Binding Data
+1. Primitives
+1. Function Signature
+1. Structs and Enums
+1. Generics
+1. Closures
+1. Loops and iteration
+1. Matching!
+1. Testing
+
+---
+
+template: header
+
+name: install
+
+### Installation
+
+---
+
+template: install
+
+## rustup
+
+This page will get you started:
+
+.center[
+https://rustup.rs/
+]
+
+```bash
+$ curl https://sh.rustup.rs -sSf | sh
+```
+
+--
+
+And bring yourself up to date:
+
+```bash
+$ rustup update
+```
+
+---
+
+template: install
+layout: true
+name: toolchains
+
+## Toolchains
+
+---
+
+template: toolchains
+
+Toolchains allow you to install various targets and features to rust.
+
+---
+
+template: toolchains
+
+You can bring in the nightly compiler:
+
+```bash
+$ rustup install nightly
+```
+
+---
+
+template: toolchains
+
+Then you can run the compiler with the nightly build:
+
+```bash
+$ rustup run nightly rustc foo.rs
+```
+
+---
+
+template: toolchains
+
+You can also use it to add features:
+
+```bash
+$ rustup component add rustfmt-preview
+```
+
+--
+
+Allowing you to then run:
+
+```bash
+$ cargo fmt
+```
+
+---
+
+template: install
+layout: true
+name: cargo
+
+## cargo
+
+---
+
+template: cargo
+
+Is the sharpest tool in your toolbox!
+
+Cargo is going to do everything for you...
+
+---
+
+template: cargo
+
+Create your codebase:
+
+```bash
+$ cargo new welcome-to-rust
+```
+
+---
+
+template: cargo
+
+Build your code
+
+```bash
+$ cargo build
+```
+
+---
+
+template: cargo
+
+Run your code
+
+```bash
+$ cargo run
+```
+
+---
+
+template: cargo
+
+Run your tests
+
+```bash
+$ cargo test
+```
+
+---
+
+template: cargo
+
+Generate your documentation
+
+```bash
+$ cargo doc --open
+```
+
+---
+
+template: cargo
+
+Publish your code
+
+```bash
+$ cargo publish
+```
+
+--
+
+which brings us to...
+
+---
+
+template: install
+name: crates
+
+## Crates
+
+---
+
+template: crates
+
+A crate is a "package"
+
+Like a
+--
+ gem,
+--
+ or a npm module,
+--
+ or a hex package
+
+---
+
+template: crates
+
+You can find all published crates on https://crates.io/
+
+Dependencies are specified in the Cargo.toml under the dependencies section
+
+```toml
+[package]
+name = "welcome-to-rust"
+version = "0.1.0"
+authors = ["Kevin Bacha"]
+
+[dependencies]
+clap = "2.31"
+```
+
+---
+
+template: install
+
+## Folder/File structure
+
+Just as ruby and elixir use `lib` and rails uses `app`, rust uses `src` to house the code
+
+```bash
+./Cargo.toml    # Package manifest
+./Cargo.lock    # Libraries won't have a lock file
+./src/
+./src/main.rs   # Libraries will have lib.rs
+./target        # Created with cargo
+./tests/        # Optional
+```
+
+---
+
+template: header
+
+# Agenda
+
+1. Why Rust?
+1. Installation
+1. **Binding Data**
+1. Primitives
+1. Function Signature
+1. Structs and Enums
+1. Generics
+1. Closures
+1. Loops and iteration
+1. Matching!
+1. Testing
+
+---
+
+template: header
+layout: true
+name: binding
+
+### Binding Data
+
+---
+
+template: binding
+
+## Let
+
+The anatomy of a binding
+
+```rust
+let x: u32 = 1u32;
+```
+
+---
+
+template: binding
+
+## Mutability
+
+Immutable by default:
+
+```rust
+let x = 1;
+x = 2; // Does not compile
+```
+
+--
+
+However, you can rebind the value
+
+```rust
+let x = 1;
+let x = 2; // Rebinds and overwrites
+```
+
+---
+
+template: binding
+
+## Mutability
+
+But we can make something mutable
+
+```rust
+let mut x = 1;
+x = 2; // Works now!
+```
+
+---
+
+template: header
+
+# Agenda
+
+1. Why Rust?
+1. Installation
+1. Binding Data
+1. **Primitives**
+1. Function Signature
+1. Structs and Enums
+1. Generics
+1. Closures
+1. Loops and iteration
+1. Matching!
+1. Testing
+
+---
+
+template: header
+layout: true
+name: primitives
+
+### Primitives
+
+---
+
+template: primitives
+
+## Booleans
+
+The `bool` type is for `true` and `false` values
+
+```rust
+let x = true;
+let y = !x;
+let z: bool = x || y;
+```
+
+[run](https://play.rust-lang.org/?gist=010615289c114fe739cedae6d1226a3c&version=stable&mode=debug)
+
+---
+
+template: primitives
+
+## Integers
+
+These are specified by either `i` (signed) or `u` (unsigned) following the bit-length
+`i8`, `i16`, `i32`, `i64`, `i128`
+`u8`, `u16`, `u32`, `u64`, `u128`
+
+```rust
+let x: u32 = 5; // Declared type
+let y = 7u32;   // Declared as part of primitive
+let z = 9;      // Inferred
+```
+[run](https://play.rust-lang.org/?gist=d1dc3a31629a4e157cc61b0b12616c0a&version=stable&mode=debug)
+
+---
+
+template: primitives
+
+## Float
+
+There are two main sizes `f32` and `f64`
+
+```rust
+let x = 5.;
+let y = 5.0;
+let z = 5f32;
+```
+
+[run](https://play.rust-lang.org/?gist=9a30299e80c2e0a69b426667376712f1&version=stable&mode=debug)
+
+---
+
+template: primitives
+
+## Sized integers
+
+There are two special integers that will have a different size depending on the compilation target
+`usize` - unsigned
+`isize` - signed
+
+These are used for indexing into arrays
+
+```rust
+let x: usize = 3;
+let array = [0, 1, 2, 3, 4, 5];
+
+println!("x:     {}", x);
+println!("array: {:?}", array);
+println!("val:   {}", array[x]);
+```
+
+[run](https://play.rust-lang.org/?gist=1c0fe9640c80e6230704167a2a5261cd&version=stable&mode=debug)
+
+---
+
+template: primitives
+
+## Array
+
+An array is a set of data of fixed size.
+
+```rust
+[T; N]
+```
+
+`T` = The sized type that is in the array
+
+`N` = A compile-time constant that defines the size.
+
+---
+
+template: primitives
+
+## Array
+
+Arrays can be declared as
+
+```rust
+let array = [0, 1, 2, 3, 4, 5];   // Array literal
+let array: [u32; 6] = array;      // Rebind to explicit type
+let array = [0; 6];               // Default all values to 0
+```
+
+[run](https://play.rust-lang.org/?gist=527d2d73a6f7ee1fbbbf73c9676d6a5d&version=stable&mode=debug)
+
+---
+
+template: primitives
+
+## Slices
+
+Slices are a pointer to a range of array data
+
+Represented with a reference (`&`) and then a range:
+
+```rust
+let array = [0, 1, 2, 3, 4, 5];
+println!("{:?}", &array[2..4]);
+```
+
+[run](https://play.rust-lang.org/?gist=6de2d6672b40db207890c3e137d47a07&version=stable&mode=debug)
+
+---
+
+template: primitives
+
+## str
+
+A `str` is the primitive string. It it always used as a slice:
+
+```rust
+let string: &str = "hello world";
+println!("{}", string);
+```
+
+[run](https://play.rust-lang.org/?gist=b3488bf4602d08faaafb26dfe7a9366b&version=stable&mode=debug)
+
+---
+
+template: primitives
+
+## Tuples
+
+A tuple is a fixed set of disparate values that may differ in size and type.
+
+Defined with smooth parens (`()`) (as opposed to curly in elixir)
+
+```rust
+let x: (u32, &str, f32) = (1, "hello", 3.0);
+```
+
+[run](https://play.rust-lang.org/?gist=a9d5637a9b8b407e061c59eacff1a068&version=stable&mode=debug)
+
+---
+
+template: primitives
+
+## Tuples
+
+Tuple values can be accessed via destructuring or by index
+
+```rust
+let x = (1, "hello", 3.0);
+let (a, _, _) = x;
+
+println!("a:   {}", a);
+println!("x.0: {}", x.0);
+```
+
+[run](https://play.rust-lang.org/?gist=b446fa71efaab415e59ceedb8222b578&version=stable&mode=debug)
+
+---
+
+template: primitives
+
+## Unit
+
+A unit is an empty tuple.
+
+* There is only one value of this so it is optimized out as zero length.
+* It is the return value of a statement.
+* It is used to represent no data being returned.
+
+It is not the same thing as null.
+
+```rust
+fn test() {
+    println!("called");
+}
+
+let x = test();
+println!("{:?}", x);
+```
+
+This is very similar to `void` in C.
+
+[run](https://play.rust-lang.org/?gist=1b644c20416f19f963bc5f831e852e97&version=stable&mode=debug)
+
+---
+
+template: header
+
+# Agenda
+
+1. Why Rust?
+1. Installation
+1. Binding Data
+1. Primitives
+1. **Function Signature**
+1. Structs and Enums
+1. Generics
+1. Closures
+1. Loops and iteration
+1. Matching!
+1. Testing
+
+---
+
+template: header
+layout: true
+name: function
+
+### Function Signature
+
+---
+
+template: function
+name: fn-format
+
+## General format
+
+---
+
+template: fn-format
+
+To create a function we use `fn`. This is the same as `function` and/or `def`.
+
+```rust
+fn len() {
+}
+```
+
+---
+
+template: fn-format
+
+Returning a value
+
+```rust
+fn len() -> usize {
+    0
+}
+```
+
+--
+
+or...
+
+---
+
+template: fn-format
+
+...with return keyword
+
+```rust
+fn len() -> usize {
+    return 0;
+}
+```
+
+---
+
+template: fn-format
+
+Taking an argument
+
+```rust
+fn len(s: &str) -> usize {
+    s.len()
+}
+```
+
+---
+
+Putting it all together...
+
+---
+
+template: function
+
+## A Function!
+
+```rust
+fn len(s: &str) -> usize {
+    s.len()
+}
+
+fn print_len(s: &str) -> () {
+    println!("{} is {} chars long", s, len(s));
+}
+```
+
+[run](https://play.rust-lang.org/?gist=0339b29bfa184c24e757c87e9e44087d&version=stable&mode=debug)
+
+---
+
+template: function
+
+## Some other notes
+
+* All local variables must be fixed size
+* Arguments and returned values must be fixed size (Sized trait)
+* Non fixed-size values must be placed on the heap as references
+
+--
+* There's more but there's more to learn first
+
+---
+
+template: header
+
+# Agenda
+
+1. Why Rust?
+1. Installation
+1. Binding Data
+1. Primitives
+1. Function Signature
+1. **Structs and Enums**
+1. Generics
+1. Closures
+1. Loops and iteration
+1. Matching!
+1. Testing
+
+---
+
+template: header
+name: structs
+
+### Enums and Structs
+
+---
+
+template: structs
+
+## What are they?
+
+A way to represent data and hand it around
+
+--
+
+#### Three types:
+
+* Unit
+* Tuple
+* Classic
+
+---
+
+template: structs
+
+## Unit Structs
+
+Simply a type, has not allocated memory
+
+```rust
+struct Nil;
+```
+
+Good for generics and implementing traits
+
+---
+
+template: structs
+
+## Tuple Structs (newtype)
+
+Used for representing a data type.
+
+```rust
+struct Instant(u64, u32);
+let instant = Instant(1000, 123);
+```
+
+---
+
+template: structs
+
+## Classic structs
+
+Complex data types with fields
+
+```rust
+struct Point {
+    x: f64,
+    y: f64,
+}
+
+// Structs are bindable data types
+struct Segment {
+    start: Point,
+    stop: Point,
+}
+```
+
+[run](https://play.rust-lang.org/?gist=35608ec321d52eb2db859a09ddf1b1d2&version=stable&mode=debug)
+
+--
+
+Self learning: Learn how to add a reference to a struct.
+
+---
+
+template: structs
+
+## Associated Functions
+
+We can also implement functions on a struct
+
+```rust
+impl Segment {
+    fn new(start: Point, stop: Point) -> Segment {
+        Self { start, stop }
+    }
+
+    fn distance(&self) -> f64 {
+        f64::sqrt(
+            (self.stop.x - self.start.x) +
+            (self.stop.y - self.start.y)
+        )
+    }
+}
+```
+
+[run](https://play.rust-lang.org/?gist=f5d92b6520376164be9199416a2b6c9e&version=stable&mode=debug)
+
+---
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
