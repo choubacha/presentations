@@ -910,6 +910,33 @@ impl Segment {
 
 ---
 
+template: structs
+
+## `self` vs `Self`
+
+--
+
+Lowercase indicates the sugary first param.
+
+```rust
+fn bar(&self) {
+    println!("{}", self.a);
+}
+```
+
+--
+
+Titlecase indicates an alias for implementing class
+
+```rust
+fn new() -> Self {
+    Self { a: 123 }
+}
+```
+
+[run](https://play.rust-lang.org/?gist=b361c5d8f2a6bdf1c5672bba78762927&version=stable&mode=debug)
+
+---
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
     </script>
