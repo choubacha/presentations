@@ -60,10 +60,10 @@ template: header
 1. Primitives
 1. Function Signature
 1. Structs and Enums
+1. Matching!
 1. Generics
 1. Closures
 1. Loops and iteration
-1. Matching!
 1. Testing
 
 ---
@@ -147,10 +147,10 @@ template: header
 1. Primitives
 1. Function Signature
 1. Structs and Enums
+1. Matching!
 1. Generics
 1. Closures
 1. Loops and iteration
-1. Matching!
 1. Testing
 
 ---
@@ -385,10 +385,10 @@ template: header
 1. Primitives
 1. Function Signature
 1. Structs and Enums
+1. Matching!
 1. Generics
 1. Closures
 1. Loops and iteration
-1. Matching!
 1. Testing
 
 ---
@@ -458,10 +458,10 @@ template: header
 1. **Primitives**
 1. Function Signature
 1. Structs and Enums
+1. Matching!
 1. Generics
 1. Closures
 1. Loops and iteration
-1. Matching!
 1. Testing
 
 ---
@@ -681,10 +681,10 @@ template: header
 1. Primitives
 1. **Function Signature**
 1. Structs and Enums
+1. Matching!
 1. Generics
 1. Closures
 1. Loops and iteration
-1. Matching!
 1. Testing
 
 ---
@@ -800,18 +800,32 @@ template: header
 1. Primitives
 1. Function Signature
 1. **Structs and Enums**
+1. Matching!
 1. Generics
 1. Closures
 1. Loops and iteration
-1. Matching!
 1. Testing
+
+---
+
+template: header
+
+## Enum and Structs
+
+* Rust has 2 main data holding types
+
+--
+* Structs describe a single structure
+
+--
+* Enums describe variations
 
 ---
 
 template: header
 name: structs
 
-### Enums and Structs
+### Structs
 
 ---
 
@@ -937,6 +951,113 @@ fn new() -> Self {
 [run](https://play.rust-lang.org/?gist=b361c5d8f2a6bdf1c5672bba78762927&version=stable&mode=debug)
 
 ---
+
+template: header
+layout: true
+name: enums
+
+### Enums
+
+---
+
+template: enums
+
+## Enums
+
+* Enums describe a type that can _be_ multiple variants.
+--
+
+* Each variant is like a struct
+
+---
+
+template: enums
+
+## Unit Enums
+
+Separate a type into numerous variants
+
+```rust
+enum Foo {
+    Bar,
+    Boo,
+}
+```
+
+You may also implement functions similar to structs: [run](https://play.rust-lang.org/?gist=62379f936f72fa710b98094c71ae1966&version=stable&mode=debug)
+
+---
+
+template: enums
+
+## Tuple Enums
+
+* Just like tuple structs, you can have tuple enums.
+--
+
+* You can mix the two
+
+```rust
+enum Foo {
+    Bar,
+    Boo(usize),
+}
+```
+
+[run](https://play.rust-lang.org/?gist=05c8850c988fa0f374047697feaf7200&version=stable&mode=debug)
+
+---
+
+template: enums
+
+## Struct Enums
+
+* You can have fields on enum variants
+--
+
+* This is the least common form of an enum
+--
+
+* This can also be mixed
+
+```rust
+enum Foo {
+    Bar,
+    Boo { a: usize },
+}
+```
+
+[run](https://play.rust-lang.org/?gist=abd1a18d593fbce2a06ef99494c1f9d5&version=stable&mode=debug)
+
+---
+
+template: enums
+
+## Enums will become more interesting with matching!
+
+---
+
+template: header
+
+# Agenda
+
+1. Why Rust?
+1. Installation
+1. Binding Data
+1. Primitives
+1. Function Signature
+1. Structs and Enums
+1. **Matching!**
+1. Generics
+1. Closures
+1. Loops and iteration
+1. Testing
+
+---
+
+template: header
+
+# Questions?
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
     </script>
