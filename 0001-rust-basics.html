@@ -1056,6 +1056,65 @@ template: header
 ---
 
 template: header
+layout: true
+name: matching
+
+### Matching
+
+---
+
+template: matching
+
+## Pattern Matching
+
+Can be done in two places:
+
+--
+* Bindings
+
+--
+
+* `match` keyword
+
+---
+
+template: matching
+
+## Bindings
+
+* Looks similar to creation
+* Where there are literals should go variable name
+* `_` can be used to ignore values
+
+---
+
+template: matching
+
+## Params and lets work the same
+
+```rust
+// As args
+fn foo(Foo { bar }: Foo) {
+    println!("inside foo() the bar is: {}", bar);
+}
+
+// As let
+let Foo { bar } = Foo { bar: 123 };
+```
+
+[run](https://play.rust-lang.org/?gist=3a9a58e68544137d4e0b17e90748f53e&version=stable&mode=debug)
+
+---
+
+template: matching
+
+## Structs bindings
+
+[run](https://play.rust-lang.org/?gist=71194cd9726cc6792e501920f2f78314&version=stable&mode=debug)
+
+---
+
+template: header
 
 # Questions?
     </textarea>
