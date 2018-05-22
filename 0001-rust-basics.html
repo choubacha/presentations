@@ -1085,12 +1085,66 @@ template: matching
 * Looks similar to creation
 * Where there are literals should go variable name
 * `_` can be used to ignore values
+* Enums do not present this interface as they represent multiple different types
 
 ---
 
 template: matching
 
-## Params and lets work the same
+## Tuple Bindings
+
+Tuples can be destructured through bind matching:
+
+```rust
+let tuple = (123, "hello", 456);
+let (_, string, _) = tuple;
+```
+
+---
+
+template: matching
+
+## Tuple struct bindings
+
+You can bind on inner values
+
+```rust
+fn tuple(Foo(val): Foo) {
+    println!("val: {}", val);
+}
+```
+
+[run](https://play.rust-lang.org/?gist=4849bb036ada449820193d1cf1737eff&version=stable&mode=debug)
+
+---
+
+template: matching
+
+## Struct bindings
+
+You can bind on fields:
+
+``rust
+// Outside world knows to pass a `Boo` but we
+// only need the away field
+fn extract_field(Boo { away, .. }: Boo) {
+    println!("away: {}", away)
+}
+
+// Change the name with the right most value
+fn rename_field(Foo { bar: b, ..}: Foo) {
+    println!("b: {}", b);
+}
+```
+
+
+[run](https://play.rust-lang.org/?gist=71194cd9726cc6792e501920f2f78314&version=stable&mode=debug)
+
+---
+
+template: matching
+
+## Params and lets have the same syntax
 
 ```rust
 // As args
@@ -1108,9 +1162,84 @@ let Foo { bar } = Foo { bar: 123 };
 
 template: matching
 
-## Structs bindings
+## The `match` keyword
 
-[run](https://play.rust-lang.org/?gist=71194cd9726cc6792e501920f2f78314&version=stable&mode=debug)
+Rust provides a powerful expression for matching: `match`
+
+```rust
+let result = match val {
+    1 => "one",
+    2 => "two",
+    3 => "three",
+    4...10 => "somewhere between 4 and 10 (including 10)",
+    11..=20 => "somewhere between 11 and 20 (including 20)",
+    _ => "other",
+};
+```
+
+[run](https://play.rust-lang.org/?gist=89fd6939a8b715ff8b528d4869c1acee&version=stable&mode=debug)
+
+---
+
+template: matching
+
+## The `match` keyword
+
+* Is exhaustive (if compiler can detect missing cases, it will fail)
+* Good for matching enums
+* Can match literals inside structs or enums
+
+---
+
+template: matching
+
+## Ranges
+
+For numbers you can specify ranges using inclusion ranges:
+
+`1...3` or `1..=3` (that latter is new)
+
+---
+
+template: matching
+
+## Guards
+
+You can add guards to the end of a match clause:
+
+```rust
+let result = match val {
+    // snip
+    x if x <= 10 => "somewhere between 4 and 10 (including 10)",
+    // snip
+};
+```
+
+---
+
+template: matching
+
+## Bindings
+
+You can bind to values on the left for use in the right
+
+---
+
+template: matching
+
+## Enums
+
+---
+
+template: matching
+
+## Structs
+
+---
+
+template: matching
+
+## Multiple patterns
 
 ---
 
