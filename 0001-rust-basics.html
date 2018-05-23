@@ -1083,9 +1083,49 @@ template: matching
 ## Bindings
 
 * Looks similar to creation
-* Where there are literals should go variable name
+  * Where a literal should go, place a variable name
 * `_` can be used to ignore values
 * Enums do not present this interface as they represent multiple different types
+* Unlike Elixir, bindings do not "match" literals
+--
+
+  * `let 1 = 1;` does not compile
+--
+
+  * Every pattern must be irrefutable
+  * This is checked at compile time
+
+---
+
+template: matching
+
+## Bindings... Revisited
+
+`x` matches 1 and gets bound to x.
+
+```rust
+let x = 1;
+```
+
+---
+
+template: matching
+
+## Arrays
+
+Arrays and slices can be matched
+
+```rust
+let array = [1, 2, 3, 4];
+let [one, _, _, _] = array;
+```
+
+--
+...subslice patterns are not yet stabilized
+
+```rust
+let [a, ..] = array; // Nightly only
+```
 
 ---
 
@@ -1124,7 +1164,7 @@ template: matching
 
 You can bind on fields:
 
-``rust
+```rust
 // Outside world knows to pass a `Boo` but we
 // only need the away field
 fn extract_field(Boo { away, .. }: Boo) {
@@ -1187,7 +1227,10 @@ template: matching
 
 * Is exhaustive (if compiler can detect missing cases, it will fail)
 * Good for matching enums
-* Can match literals inside structs or enums
+* Since every case can be examined...
+--
+
+  * Can match on literals (inside structs and enums as well)
 
 ---
 
@@ -1219,15 +1262,32 @@ let result = match val {
 
 template: matching
 
-## Bindings
+## `match` Bindings
 
-You can bind to values on the left for use in the right
+* You can bind to values on the left for use in the right
+--
+
+* This works the same way as any of the previous binding patterns:
+* `@` keyword can direct a binding
+
+```rust
+match foo {
+    x @ 1...10 => println!("Your number was: {}", x),
+    _ => println!("Your number was not in the right range!"),
+}
+```
+
 
 ---
 
 template: matching
 
 ## Enums
+
+* Enums can be matched and their values bound
+
+```rust
+```
 
 ---
 
