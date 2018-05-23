@@ -608,6 +608,31 @@ let array = [0; 6];               // Default all values to 0
 
 template: primitives
 
+## Vec
+
+* Not a primitive, but works like an array
+--
+
+* Dynamically sized
+--
+
+* Not allocated until data is added
+--
+
+* What is called a "smart" pointer
+--
+
+```rust
+let mut vec = Vec::new();
+vec.push(1);
+vec.push(2);
+println!("the vec is {} long", vec.len());
+```
+
+---
+
+template: primitives
+
 ## Slices
 
 Slices are a pointer to a range of array data
@@ -620,6 +645,10 @@ println!("{:?}", &array[2..4]);
 ```
 
 [run](https://play.rust-lang.org/?gist=6de2d6672b40db207890c3e137d47a07&version=stable&mode=debug)
+
+--
+
+Also works on vecs and strings!
 
 ---
 
@@ -1585,6 +1614,245 @@ template: header
 1. Closures
 1. **Loops and iteration**
 1. Testing
+
+---
+
+template: header
+layout: true
+name: loops
+
+### Loops
+
+---
+
+template: loops
+
+## Looping
+
+* Indefinite: use `loop`
+
+--
+* Conditional: use `while`
+
+--
+* Across a set:
+  * use `for _ in _` for simple iteration
+  * use the iterator composition for set operations
+
+---
+
+template: loops
+
+## `loop`
+
+Straight forward, executes scope forever
+
+```rust
+loop {
+    println!("hello world");
+}
+```
+
+[run](https://play.rust-lang.org/?gist=ab5eccb6a0355dcf323770af13d476c9&version=stable&mode=debug)
+
+---
+
+template: loops
+
+## `while`
+
+Evaluate condition, execute scope, repeat.
+
+```rust
+while count < 10 {
+    println!("hello world");
+    count += 1;
+}
+```
+[run](https://play.rust-lang.org/?gist=c385c3553bf9906fceb7f4e59a907963&version=stable&mode=debug)
+
+---
+
+template: loops
+
+## `for _ in _`
+
+To iterate on each thing in a set
+
+```rust
+let array = [1, 2, 3, 4, 5];
+for val in &array {
+    println!("val: {}", val);
+}
+```
+
+[run](https://play.rust-lang.org/?gist=8cd3dbd40b480d4e02671ba558412944&version=stable&mode=debug)
+
+---
+
+template: loops
+
+## Iterators
+
+* Vecs and arrays have convenience methods to create iterators
+--
+
+* Lazy iteration
+--
+
+* "Borrows" the values as immutable references
+--
+
+  * this is checked at compile time
+--
+
+  * it uses lifetimes (next L&L maybe?) to guarentee values don't change
+--
+
+    * aka: if you try to change a value, it won't compile
+--
+
+* Can implement your own using the `Iterator` trait
+  * Gain many provided methods
+--
+
+  * [Iterator](https://doc.rust-lang.org/std/iter/trait.Iterator.html)
+
+---
+
+template: loops
+
+## Iterator examples
+
+```rust
+let array = [1, 2, 3, 4, 5, 6, 7];
+println!("count: {}", array.iter().count());
+println!("sum:   {}", array.iter().fold(0, |acc, val| acc + val));
+
+let mapped: Vec<i32> = array.iter().map(|v| v * 2).collect();
+println!("map:   {:?}", mapped);
+```
+
+[run](https://play.rust-lang.org/?gist=579f456c93b23164619c3183bff320e3&version=stable&mode=debug)
+
+---
+
+template: header
+
+# Agenda
+
+1. Why Rust?
+1. Installation
+1. Binding Data
+1. Primitives
+1. Function Signature
+1. Structs and Enums
+1. Matching!
+1. Generics
+1. Closures
+1. Loops and iteration
+1. **Testing**
+
+---
+
+template: header
+layout: true
+name: tests
+
+---
+
+template: tests
+
+## Testing
+
+* Testing is first class in rust
+--
+
+* Runs in parallel by default
+--
+
+* Runs with the compile flag `test` (`#[cfg(test)]`)
+--
+
+* Done in three ways:
+--
+
+  * Unit
+  * Integration
+  * Doc
+
+---
+
+template: tests
+
+## Unit tests
+
+* Any function can be a test
+--
+
+  * Add `#[test]` right before the function
+--
+
+* But we generally want to wrap in a module
+
+--
+  * Which gets a compile flag added
+  * `#[cfg(test)]`
+
+--
+
+[Real life example](https://github.com/kbacha/stellar-sdk/blob/291acb2111cb481498add380a0d62b9c56e6165c/client/src/resources/amount.rs#L16-L40)
+
+---
+
+template: tests
+
+## Integration tests
+
+* Put in a separate directory (`/tests`)
+
+--
+* Still run automatically via cargo
+
+--
+* Excluded from binary builds
+
+--
+
+[Real life example](https://github.com/kbacha/grusp/blob/4ba3c9241e9101291679989054552840d8f46001/tests/integration.rs#L18-L25)
+
+---
+
+template: tests
+
+## Doc tests
+
+* Documentation in rust precedes the code as comments with `///`
+--
+
+* Doc comments use Markdown
+--
+
+* Code blocks (triple ticks) will be executed as tests
+
+--
+
+[Documentation](https://docs.rs/stellar-client/0.1.1/stellar_client/endpoint/transaction/struct.Details.html)
+[Source](https://github.com/kbacha/stellar-sdk/blob/291acb2111cb481498add380a0d62b9c56e6165c/client/src/endpoint/transaction.rs#L122-L141)
+
+---
+
+template: tests
+
+## Running
+
+```bash
+$ cargo test
+```
+
+--
+
+Demo?
 
 ---
 
