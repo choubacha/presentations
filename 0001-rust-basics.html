@@ -52,6 +52,20 @@ Rust
 
 template: header
 
+# What is rust?
+
+--
+
+Rust is a systems programming language that runs blazingly fast, prevents segfaults, and guarantees thread safety.
+
+--
+
+source: https://www.rust-lang.org/en-US/
+
+---
+
+template: header
+
 # Agenda
 
 1. **Why Rust?**
@@ -251,6 +265,8 @@ template: cargo
 
 Is the sharpest tool in your toolbox!
 
+--
+
 Cargo is going to do everything for you...
 
 ---
@@ -258,6 +274,8 @@ Cargo is going to do everything for you...
 template: cargo
 
 Create your codebase:
+
+--
 
 ```bash
 $ cargo new welcome-to-rust
@@ -269,6 +287,8 @@ template: cargo
 
 Build your code
 
+--
+
 ```bash
 $ cargo build
 ```
@@ -278,6 +298,8 @@ $ cargo build
 template: cargo
 
 Run your code
+
+--
 
 ```bash
 $ cargo run
@@ -289,6 +311,8 @@ template: cargo
 
 Run your tests
 
+--
+
 ```bash
 $ cargo test
 ```
@@ -299,6 +323,8 @@ template: cargo
 
 Generate your documentation
 
+--
+
 ```bash
 $ cargo doc --open
 ```
@@ -308,6 +334,8 @@ $ cargo doc --open
 template: cargo
 
 Publish your code
+
+--
 
 ```bash
 $ cargo publish
@@ -1202,6 +1230,24 @@ let Foo { bar } = Foo { bar: 123 };
 
 template: matching
 
+## `if let` and `while let`
+
+Bind with a condition or loop
+
+```rust
+if let Some(val) = foo.bar() {
+    // work with val here
+}
+
+while let Some(val) = foo.next() {
+    // work with val here
+}
+```
+
+---
+
+template: matching
+
 ## The `match` keyword
 
 Rust provides a powerful expression for matching: `match`
@@ -1226,11 +1272,52 @@ template: matching
 ## The `match` keyword
 
 * Is exhaustive (if compiler can detect missing cases, it will fail)
+--
+
 * Good for matching enums
+--
+
 * Since every case can be examined...
 --
 
   * Can match on literals (inside structs and enums as well)
+--
+
+* Every arm must return the same type
+
+---
+
+template: matching
+
+## General Syntax
+
+```rust
+match foo {
+    pattern => expression,
+    pattern_2 => {
+        // multiline
+        // expression
+    }
+}
+```
+
+---
+
+template: matching
+
+## General Syntax
+
+Matches are expressions and return a value:
+
+```rust
+let result = match foo {
+    pattern => expression,
+    pattern_2 => {
+        // multiline
+        // expression
+    }
+}; // Trailing semi colon
+```
 
 ---
 
@@ -1241,6 +1328,29 @@ template: matching
 For numbers you can specify ranges using inclusion ranges:
 
 `1...3` or `1..=3` (that latter is new)
+
+---
+
+template: matching
+
+## `match` Bindings
+
+* You can bind to values on the left for use in the right
+--
+
+* This works the same way as any of the previous binding patterns
+--
+
+* `@` keyword can direct a binding
+
+```rust
+match val {
+    x @ 4...10 => println!("Your number is between 4 and 10: {}", x),
+    x => println!("You specified: {}", x),
+};
+```
+
+[run](https://play.rust-lang.org/?gist=e1d76363a3b4b1e9a740f1c3dcccddd9&version=stable&mode=debug)
 
 ---
 
@@ -1262,31 +1372,15 @@ let result = match val {
 
 template: matching
 
-## `match` Bindings
+## Multiple patterns
 
-* You can bind to values on the left for use in the right
---
-
-* This works the same way as any of the previous binding patterns:
-* `@` keyword can direct a binding
+You can match multiple times on the same arm using `|`
 
 ```rust
-match foo {
-    x @ 1...10 => println!("Your number was: {}", x),
-    _ => println!("Your number was not in the right range!"),
+match x {
+    1 | 2 | 3 | 5 | 7 => "primes under 10",
+    _ => "nothing special",
 }
-```
-
-
----
-
-template: matching
-
-## Enums
-
-* Enums can be matched and their values bound
-
-```rust
 ```
 
 ---
@@ -1295,17 +1389,209 @@ template: matching
 
 ## Structs
 
+It's not as common, but you can match structs:
+
+```rust
+match point {
+    Point { x: 123, y: 456 } => println!("a point of x: 123, y: 456"),
+    Point { x, y } => println!("a point with x: {} and y: {}", x, y),
+}
+```
+
+[run](https://play.rust-lang.org/?gist=382563751a9928d1c6209c6d3aa9565d&version=stable&mode=debug)
+
 ---
 
 template: matching
 
-## Multiple patterns
+## Enums
+
+* Enums can be matched and their values bound
+--
+
+* Matching enums is very common
+
+--
+
+```rust
+match foo {
+    Foo::Unit => println!("the unit"),
+    Foo::Tuple(123, 456) => println!("a tuple of 123, 456"),
+    Foo::Struct { x, y } => println!("a struct with x: {} and y: {}", x, y),
+}
+```
+
+[run](https://play.rust-lang.org/?gist=b8129211d6fd0560b4fac08f20433c14&version=stable&mode=debug)
+
+---
+
+template: header
+
+# Agenda
+
+1. Why Rust?
+1. Installation
+1. Binding Data
+1. Primitives
+1. Function Signature
+1. Structs and Enums
+1. Matching!
+1. **Generics**
+1. Closures
+1. Loops and iteration
+1. Testing
+
+---
+
+template: header
+layout: true
+name: generics
+
+### Generics
+
+---
+
+template: generics
+
+## Brief intro to generics
+
+--
+
+* Syntax similar to C and C#
+--
+
+* Create a type that takes a type argument
+--
+
+* Can create generalized data structures
+--
+
+* Types can be constrained by "traits"
+
+---
+
+template: generics
+
+## Example: Enum
+
+```rust
+enum Maybe<T> {
+    None,
+    Some(T),
+}
+```
+
+[run](https://play.rust-lang.org/?gist=fa5cbd37cf887ed7dfea667adf7e0ddb&version=stable&mode=debug)
+
+---
+
+template: generics
+
+## Example: Struct
+
+```rust
+struct Node<T> {
+    point: Point,
+    value: T,
+}
+```
+
+[run](https://play.rust-lang.org/?gist=dcfded76aee0384afb3f651875ff5ed5&version=stable&mode=debug)
+
+---
+
+template: generics
+
+## Example: With trait bound
+
+```rust
+enum Maybe<T: Debug + Sized> {
+    None,
+    Some(T),
+}
+```
+
+[run](https://play.rust-lang.org/?gist=937566b92b280f08397d07869ff117c2&version=stable&mode=debug)
+
+---
+
+template: header
+
+# Agenda
+
+1. Why Rust?
+1. Installation
+1. Binding Data
+1. Primitives
+1. Function Signature
+1. Structs and Enums
+1. Matching!
+1. Generics
+1. **Closures**
+1. Loops and iteration
+1. Testing
+
+---
+
+template: header
+layout: true
+name: closures
+
+### Closures
+
+---
+
+template: closures
+
+## Rust Closures
+
+* Powerful but can be hard to use properly with lifetimes
+--
+
+* Statically typed (like everything)
+--
+
+* Have a "type" that can be used in arguments
+
+---
+
+template: closures
+
+## Example
+
+* Pipes around args
+* Curly braces for multiple lines
+
+```rust
+test(|i| i * 2);
+```
+
+[run](https://play.rust-lang.org/?gist=b250822a77993618c6f766d9264d8432&version=stable&mode=debug)
+
+---
+
+template: header
+
+# Agenda
+
+1. Why Rust?
+1. Installation
+1. Binding Data
+1. Primitives
+1. Function Signature
+1. Structs and Enums
+1. Matching!
+1. Generics
+1. Closures
+1. **Loops and iteration**
+1. Testing
 
 ---
 
 template: header
 
 # Questions?
+
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
     </script>
