@@ -75,7 +75,7 @@ template: header
 1. Function Signature
 1. Structs and Enums
 1. Matching!
-1. Generics
+1. Generics and Traits
 1. Closures
 1. Loops and iteration
 1. Testing
@@ -162,7 +162,7 @@ template: header
 1. Function Signature
 1. Structs and Enums
 1. Matching!
-1. Generics
+1. Generics and Traits
 1. Closures
 1. Loops and iteration
 1. Testing
@@ -414,7 +414,7 @@ template: header
 1. Function Signature
 1. Structs and Enums
 1. Matching!
-1. Generics
+1. Generics and Traits
 1. Closures
 1. Loops and iteration
 1. Testing
@@ -487,7 +487,7 @@ template: header
 1. Function Signature
 1. Structs and Enums
 1. Matching!
-1. Generics
+1. Generics and Traits
 1. Closures
 1. Loops and iteration
 1. Testing
@@ -739,7 +739,7 @@ template: header
 1. **Function Signature**
 1. Structs and Enums
 1. Matching!
-1. Generics
+1. Generics and Traits
 1. Closures
 1. Loops and iteration
 1. Testing
@@ -858,7 +858,7 @@ template: header
 1. Function Signature
 1. **Structs and Enums**
 1. Matching!
-1. Generics
+1. Generics and Traits
 1. Closures
 1. Loops and iteration
 1. Testing
@@ -1105,7 +1105,7 @@ template: header
 1. Function Signature
 1. Structs and Enums
 1. **Matching!**
-1. Generics
+1. Generics and Traits
 1. Closures
 1. Loops and iteration
 1. Testing
@@ -1140,9 +1140,17 @@ template: matching
 ## Bindings
 
 * Looks similar to creation
+--
+
   * Where a literal should go, place a variable name
+--
+
 * `_` can be used to ignore values
-* Enums do not present this interface as they represent multiple different types
+--
+
+* Enums can be used here, but are not always refutable [run](https://play.rust-lang.org/?gist=42d15e6adfb80472946c8f0e476e4680&version=stable&mode=debug)
+--
+
 * Unlike Elixir, bindings do not "match" literals
 --
 
@@ -1150,6 +1158,8 @@ template: matching
 --
 
   * Every pattern must be irrefutable
+--
+
   * This is checked at compile time
 
 ---
@@ -1280,6 +1290,8 @@ template: matching
 ## The `match` keyword
 
 Rust provides a powerful expression for matching: `match`
+
+--
 
 ```rust
 let result = match val {
@@ -1465,7 +1477,7 @@ template: header
 1. Function Signature
 1. Structs and Enums
 1. Matching!
-1. **Generics**
+1. **Generics and Traits**
 1. Closures
 1. Loops and iteration
 1. Testing
@@ -1476,7 +1488,111 @@ template: header
 layout: true
 name: generics
 
-### Generics
+### Generics and Traits
+
+---
+
+template: generics
+
+## Traits!
+
+* What aren't they?
+--
+
+  * Not inheritance
+--
+
+  * Not what a thing _is_
+--
+
+  * Does not define data
+
+---
+
+template: generics
+
+## Traits
+
+* What _are_ they?
+--
+
+  * Represents what something _can do_
+--
+
+  * Named generally as active verbs (`Debug` `Clone` `Copy`)
+--
+
+  * Named after the functions they implement
+--
+
+  * Defines an interface
+--
+
+  * Similar to `interface` in Java or C#
+---
+
+template: generics
+
+## Simple Trait
+
+* Use the keyword `trait` followed by something that looks like an `impl` block
+
+--
+* Functions can be lacking implementation. These are "required"
+
+--
+* Functions can have implementation. These are "provided"
+
+```rust
+trait Inspect {
+    // required
+    fn inspect(&self) -> String;
+
+    // provided
+    fn println(&self) {
+        println!("{}", self.inspect());
+    }
+}
+```
+
+---
+
+template: generics
+
+## Implementing
+
+* Use a separate `impl Trait for Type` block
+--
+
+* Cannot introduce non-trait methods in this block
+--
+
+* One of the types (trait or implementing type) must be crate-local
+
+---
+
+template: generics
+
+## Simple example:
+
+
+```rust
+trait Inspect {
+    fn inspect(&self) -> String;
+}
+
+struct Bar {
+    foo: String,
+}
+
+impl Inspect for Bar {
+    fn inspect(&self) -> String {
+        self.foo.clone()
+    }
+}
+```
+
+[run](https://play.rust-lang.org/?gist=75e96f901c67785b230acb4649916423&version=stable&mode=debug)
 
 ---
 
@@ -1544,6 +1660,30 @@ enum Maybe<T: Debug + Sized> {
 
 ---
 
+template: generics
+
+## Bigger example: Trait specialization using generics
+
+```rust
+trait Inspect {
+    fn inspect(&self) -> String;
+}
+
+trait Print {
+    fn print(&self);
+}
+
+impl<T> Print for T where T: Inspect {
+    fn print(&self) {
+        println!("printed: {}", self.inspect());
+    }
+}
+```
+
+[run](https://play.rust-lang.org/?gist=aebe9a2b0ae8dd44ac687a58a9ef16c4&version=stable&mode=debug)
+
+---
+
 template: header
 
 # Agenda
@@ -1555,7 +1695,7 @@ template: header
 1. Function Signature
 1. Structs and Enums
 1. Matching!
-1. Generics
+1. Generics and Traits
 1. **Closures**
 1. Loops and iteration
 1. Testing
@@ -1748,7 +1888,7 @@ template: header
 1. Function Signature
 1. Structs and Enums
 1. Matching!
-1. Generics
+1. Generics and Traits
 1. Closures
 1. Loops and iteration
 1. **Testing**
